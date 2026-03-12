@@ -33,6 +33,14 @@ jobs:
       - name: Build application with Maven
         run: mvn clean package -DskipTests
 
+      - name: Run Trivy SCA scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '0'
+          
       - name: Build Docker image
         run: docker build -t dvja:latest .
 
