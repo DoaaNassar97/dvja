@@ -9,12 +9,21 @@ on:
       - master
 
 jobs:
-  test-pipeline:
+  build-java-app:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Show repository files
-        run: ls -la
+      - name: Set up Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Check Java version
+        run: java -version
+
+      - name: Build application with Maven
+        run: mvn clean package -DskipTests
