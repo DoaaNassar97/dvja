@@ -51,9 +51,7 @@ jobs:
           format: 'json'
           output: 'trivy-image-report.json'
           exit-code: '0
-
       
-
       - name: Show Trivy report file
         run: ls -la trivy-image-report.json
 
@@ -63,41 +61,35 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-
             const report = JSON.parse(fs.readFileSync('trivy-image-report.json', 'utf8'));
-
             let findings = [];
 
             for (const result of report.Results || []) {
               for (const vuln of result.Vulnerabilities || []) {
-
-                if (vuln.Severity === "HIGH" || vuln.Severity === "CRITICAL") {
+                if (vuln.Severity === 'HIGH' || vuln.Severity === 'CRITICAL') {
                   findings.push(vuln);
                 }
-
               }
             }
 
             if (findings.length === 0) {
-              console.log("No HIGH or CRITICAL vulnerabilities found");
+              console.log('No HIGH or CRITICAL vulnerabilities found');
               return;
             }
 
-            let body = "Trivy detected High/Critical vulnerabilities in the Docker image:\n\n";
+            let body = 'Trivy detected High/Critical vulnerabilities in the Docker image:\n\n';
 
-            findings.slice(0,20).forEach(v => {
-              body += `- ${v.Severity} | ${v.VulnerabilityID} | Package: ${v.PkgName}\n`;
+            findings.slice(0, 20).forEach(function(v) {
+              body += '- ' + v.Severity + ' | ' + v.VulnerabilityID + ' | Package: ' + v.PkgName + '\n';
             });
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: "Trivy High/Critical container vulnerabilities detected",
+              title: 'Trivy High/Critical container vulnerabilities detected',
               body: body,
-              labels: ["security","trivy"]
+              labels: ['security', 'trivy']
             });
-      
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
