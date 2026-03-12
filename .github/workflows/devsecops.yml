@@ -30,3 +30,15 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t dvja:latest .
+        
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Tag Docker image
+        run: docker tag dvja:latest ${{ secrets.DOCKERHUB_USERNAME }}/dvja:latest
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/dvja:latest
