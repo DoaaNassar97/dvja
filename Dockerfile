@@ -1,4 +1,4 @@
-FROM eclipse-temurin:8-jre
+FROM eclipse-temurin:8-jdk
 MAINTAINER Abhisek Datta <abhisek@appsecco.com>
 
 RUN apt-get update
