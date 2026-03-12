@@ -27,3 +27,6 @@ jobs:
 
       - name: Build application with Maven
         run: mvn clean package -DskipTests
+
+      - name: Build Docker image
+        run: docker build -t dvja:latest .
